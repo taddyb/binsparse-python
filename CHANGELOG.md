@@ -13,3 +13,4 @@ and this project adheres to [Semantic Versioning][].
 ### Added
 
 -   Basic tool, preprocessing and plotting functions
+-   Support for COOC arrays
