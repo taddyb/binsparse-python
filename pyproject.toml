@@ -21,7 +21,6 @@ urls.Home-page = "https://github.com/ivirshup/binsparse-python"
 dependencies = [
     "scipy",
     "numpy",
-    "python-graphblas[default]",
     # for debug logging (referenced from the issue template)
     "session-info",
 ]
@@ -30,7 +29,8 @@ dependencies = [
 dev = [
     # CLI for bumping the version number
     "pre-commit",
-    "twine>=4.0.2"
+    "twine>=4.0.2",
+    "python-graphblas[default]",
 ]
 doc = [
     "docutils>=0.8,!=0.18.*,!=0.19.*",

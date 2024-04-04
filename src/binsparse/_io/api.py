@@ -1,7 +1,6 @@
 from collections.abc import Mapping
 from types import MappingProxyType
 
-import graphblas as gb
 from scipy import sparse
 
 from binsparse._io.methods import (
@@ -16,7 +15,7 @@ from binsparse._io.utils import read_attr
 from binsparse._types import GroupTypes
 
 
-def read(group: GroupTypes, struct: str | None = "scipy") -> gb.Matrix | sparse.spmatrix:
+def read(group: GroupTypes, _class: str = "scipy") -> object:
     """Read a sparse matrix from a store.
 
     Parameters
@@ -26,11 +25,11 @@ def read(group: GroupTypes, struct: str | None = "scipy") -> gb.Matrix | sparse.
     """
     metadata = read_attr(group, "binsparse")
     if metadata["format"] == "CSR":
-        return read_csr(group, struct=struct)
+        return read_csr(group, _class=_class)
     elif metadata["format"] == "CSC":
-        return read_csc(group, struct=struct)
+        return read_csc(group, _class=_class)
     elif metadata["format"] == "COO":
-        return read_coo(group, struct=struct)
+        return read_coo(group, _class=_class)
     else:
         raise NotImplementedError(f"no implementation for format {metadata['format']}")
 

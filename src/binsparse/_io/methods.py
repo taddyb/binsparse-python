@@ -60,7 +60,7 @@ def write_csr(store: GroupTypes, key: str, x: sparse.csr_matrix, *, dataset_kwar
     store.create_dataset(f"{key}/values", data=x.data, **dataset_kwargs)
 
 
-def read_csr(group: GroupTypes, struct: str) -> gb.Matrix | sparse.csr_matrix:
+def read_csr(group: GroupTypes, _class: str) -> gb.Matrix | sparse.csr_matrix:
     """Read a CSR matrix from a store.
 
     Parameters
@@ -68,8 +68,8 @@ def read_csr(group: GroupTypes, struct: str) -> gb.Matrix | sparse.csr_matrix:
     group
         A Zarr or h5py group.
 
-    struct
-        The structure to return the data in. Either "scipy" or "graphblas"
+    _class
+        The class we will use to create the sparse matrix. Either "scipy" or "graphblas"
 
     Returns
     -------
@@ -80,7 +80,7 @@ def read_csr(group: GroupTypes, struct: str) -> gb.Matrix | sparse.csr_matrix:
     assert metadata["format"] == "CSR"
     shape = tuple(metadata["shape"])
 
-    if struct.lower() == "scipy":
+    if _class.lower() == "scipy":
         return sparse.csr_matrix(
             (
                 group["values"][()],
@@ -89,14 +89,14 @@ def read_csr(group: GroupTypes, struct: str) -> gb.Matrix | sparse.csr_matrix:
             ),
             shape=shape,
         )
-    elif struct.lower() == "graphblas":
+    elif _class.lower() == "graphblas":
         return gb.Matrix.from_csr(
             group["pointers_to_1"][()],
             group["indices_1"][()],
             group["values"][()],
         )
     else:
-        raise NotImplementedError(f"no implementation for returning data using {struct}")
+        raise NotImplementedError(f"no implementation for returning data using {_class}")
 
 
 def write_csc(store: GroupTypes, key: str, x: sparse.csc_matrix, *, dataset_kwargs: Mapping = MappingProxyType({})):
@@ -129,7 +129,7 @@ def write_csc(store: GroupTypes, key: str, x: sparse.csc_matrix, *, dataset_kwar
     store.create_dataset(f"{key}/values", data=x.data, **dataset_kwargs)
 
 
-def read_csc(group: GroupTypes, struct: str) -> gb.Matrix | sparse.csc_matrix:
+def read_csc(group: GroupTypes, _class: str) -> gb.Matrix | sparse.csc_matrix:
     """Read a CSC matrix from a store.
 
     Parameters
@@ -137,8 +137,8 @@ def read_csc(group: GroupTypes, struct: str) -> gb.Matrix | sparse.csc_matrix:
     group
         A Zarr or h5py group.
 
-    struct
-        The structure to return the data in. Either "scipy" or "graphblas"
+    _class
+        The class we will use to create the sparse matrix. Either "scipy" or "graphblas"
 
     Returns
     -------
@@ -149,7 +149,7 @@ def read_csc(group: GroupTypes, struct: str) -> gb.Matrix | sparse.csc_matrix:
     assert metadata["format"] == "CSC"
     shape = tuple(metadata["shape"])
 
-    if struct.lower() == "scipy":
+    if _class.lower() == "scipy":
         return sparse.csc_matrix(
             (
                 group["values"][()],
@@ -158,14 +158,14 @@ def read_csc(group: GroupTypes, struct: str) -> gb.Matrix | sparse.csc_matrix:
             ),
             shape=shape,
         )
-    elif struct.lower() == "graphblas":
+    elif _class.lower() == "graphblas":
         return gb.Matrix.from_csc(
             group["pointers_to_1"][()],
             group["indices_1"][()],
             group["values"][()],
         )
     else:
-        raise NotImplementedError(f"no implementation for returning data using {struct}")
+        raise NotImplementedError(f"no implementation for returning data using {_class}")
 
 
 def write_coo(store: GroupTypes, key: str, x: sparse.csc_matrix, *, dataset_kwargs: Mapping = MappingProxyType({})):
@@ -198,7 +198,7 @@ def write_coo(store: GroupTypes, key: str, x: sparse.csc_matrix, *, dataset_kwar
     store.create_dataset(f"{key}/values", data=x.data, **dataset_kwargs)
 
 
-def read_coo(group: GroupTypes, struct: str) -> gb.Matrix | sparse.coo_matrix:
+def read_coo(group: GroupTypes, _class: str) -> gb.Matrix | sparse.coo_matrix:
     """Read a COO matrix from a store.
 
     Parameters
@@ -206,8 +206,8 @@ def read_coo(group: GroupTypes, struct: str) -> gb.Matrix | sparse.coo_matrix:
     group
         A Zarr or h5py group.
 
-    struct
-        The structure to return the data in. Either "scipy" or "graphblas"
+    _class
+        The class we will use to create the sparse matrix. Either "scipy" or "graphblas"
 
     Returns
     -------
@@ -218,7 +218,7 @@ def read_coo(group: GroupTypes, struct: str) -> gb.Matrix | sparse.coo_matrix:
     assert metadata["format"] == "COO"
     shape = tuple(metadata["shape"])
 
-    if struct.lower() == "scipy":
+    if _class.lower() == "scipy":
         return sparse.coo_matrix(
             (
                 group["values"][()],
@@ -229,11 +229,11 @@ def read_coo(group: GroupTypes, struct: str) -> gb.Matrix | sparse.coo_matrix:
             ),
             shape=shape,
         )
-    elif struct.lower() == "graphblas":
+    elif _class.lower() == "graphblas":
         return gb.Matrix.from_coo(
             group["indices_0"][()],
             group["indices_1"][()],
             group["values"][()],
         )
     else:
-        raise NotImplementedError(f"no implementation for returning data using {struct}")
+        raise NotImplementedError(f"no implementation for returning data using {_class}")

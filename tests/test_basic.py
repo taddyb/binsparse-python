@@ -50,9 +50,18 @@ def test_metadata(store, fmt):
 
 @pytest.mark.parametrize("fmt", ["csr", "csc", "coo"])
 def test_graphblas_structure(store, fmt):
-    struct = "graphblas"
     orig = sparse.random(100, 100, density=0.1, format=fmt)
     binsparse.write(store, "X", orig)
     orig = gb.io.from_scipy_sparse(orig)
-    from_disk = binsparse.read(store["X"], struct=struct)
+    from_disk = binsparse.read(store["X"], _class="graphblas")
     assert_equal(orig, from_disk)
+
+
+@pytest.mark.parametrize("fmt", ["csr", "csc", "coo"])
+def test_non_implemented_structure(store, fmt):
+    orig = sparse.random(100, 100, density=0.1, format=fmt)
+    binsparse.write(store, "X", orig)
+    orig = gb.io.from_scipy_sparse(orig)
+    with pytest.raises(NotImplementedError):
+        from_disk = binsparse.read(store["X"], _class="torch")
+        assert_equal(orig, from_disk)
